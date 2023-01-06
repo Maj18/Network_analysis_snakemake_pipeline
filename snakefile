@@ -1,5 +1,8 @@
 #To run the file:
-#conda activate yuan2
+# To run this snakemake pipeline:
+# conda activate yuan2
+# conda activate snakemake
+# snakemake --core 10
 
 feathers=["hg19-500bp-upstream-10species.mc9nr", "hg19-500bp-upstream-7species.mc9nr", "hg19-tss-centered-10kb-10species.mc9nr", "hg19-tss-centered-10kb-7species.mc9nr", "hg19-tss-centered-5kb-10species.mc9nr", "hg19-tss-centered-5kb-7species.mc9nr"]
 CLUSTERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
