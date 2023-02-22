@@ -6,7 +6,7 @@ ind <- args[2] #ARC_neuron
 
 library(Seurat)
 name=readRDS(paste0(DIR, "/A/data/", ind, "_processed.RDS"))
-write.table(t(as.matrix(name@assays$SCT@counts)), 
+write.table(t(as.matrix(name@assays$RNA@counts)), 
 		paste0(paste0(DIR, '/A/output/counts.tsv')), 
 		sep = '\t', col.names = NA)
 
