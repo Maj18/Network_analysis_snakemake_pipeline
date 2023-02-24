@@ -76,7 +76,7 @@ f_motif_path = "/scratch/yuan/pyscenicdata/motifs-v9-nr.hgnc-m0.001-o0.0.tbl"
   --mode "dask_multiprocessing" \
   --output {output_regulon} \
   --mask_dropouts \
-  --num_workers
+  --num_workers { THREADS }
 #reg.csv: is the direct target output (regulon)
 #f_loom_path_scenic: This dataset has been filtered, but not processed
 
