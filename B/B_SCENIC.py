@@ -10,22 +10,26 @@ import pandas as pd
 import scanpy as sc
 import loompy as lp
 import sklearn
+import os
 #from MulticoreTSNE import MulticoreTSNE as TSNE
 
 import session_info
 session_info.show()
-!~/.conda/envs/yuan2/bin/pyscenic
+
+#!~/.conda/envs/yuan2/bin/pyscenic
 
 
 
 # set a working directory
-wdir = "/home/zjr863/Proj3_hypothalamus_ref/gw10_new/network/"
+wdir = "/home/zjr863/Proj2_VLMC/FGF_2022/2022-02/Double/network_FGF8/"
 os.chdir( wdir )
 
 
 # # path to loom file with basic filtering applied (this will be created in the "initial filtering" step below). Optional.
-f_loom_path_scenic = wdir+"B/output/filtered_scenic.loom"
-output_auc_mtx = wdir+"B/output/auc_mtx.csv"
+f_loom_path_scenic = wdir+"B_SCENIC/output/filtered_scenic.loom"
+output_adjaceny = wdir+"B_SCENIC/output/adjacencies.csv"
+output_regulon = wdir+"B_SCENIC/output/regulons.csv"
+output_auc_mtx = wdir+"B_SCENIC/output/auc_mtx.csv"
 THREADS=20
 
 
@@ -45,8 +49,11 @@ f_tfs = "/scratch/yuan/pyscenicdata/hs_hgnc_curated_tfs.txt" # human
 # tf_names = load_tf_names( f_tfs )
 
 # f_loom_path_scenic: This dataset has been filtered, but not processed
-!~/.conda/envs/yuan2/bin/pyscenic grn {f_loom_path_scenic} {f_tfs} -o adjacencies.csv \
+!~/.conda/envs/yuan2/bin/pyscenic grn {f_loom_path_scenic} {f_tfs} -o {output_adjaceny} \
     --num_workers { THREADS }
+
+
+
 
 
 ### 2. Regulon prediction aka cisTarget from CLI (Find enriched motifs for a gene signature and opitionally prune targets from this signature based on cis-regulatory cues)
@@ -62,22 +69,29 @@ print(f_db_names)
 f_motif_path = "/scratch/yuan/pyscenicdata/motifs-v9-nr.hgnc-m0.001-o0.0.tbl"
 
 #f_loom_path_scenic: this loom file is like counts.tsv
-!~/.conda/envs/yuan2/bin/pyscenic ctx 'adjacencies.csv' \
-    {f_db_names} \
-    --annotations_fname {f_motif_path} \
-    --expression_mtx_fname {f_loom_path_scenic} \
-    --mode "dask_multiprocessing" \
-    --output regulons.csv \
-    --mask_dropouts \
-    --num_workers { THREADS }
+!~/.conda/envs/yuan2/bin/pyscenic ctx {output_adjaceny} \
+  {f_db_names} \
+  --annotations_fname {f_motif_path} \
+  --expression_mtx_fname {f_loom_path_scenic} \
+  --mode "dask_multiprocessing" \
+  --output {output_regulon} \
+  --mask_dropouts \
+  --num_workers
 #reg.csv: is the direct target output (regulon)
 #f_loom_path_scenic: This dataset has been filtered, but not processed
+
+
+
 
 
 ### 3. aucell: quantify activity of gene signatures/regulons across single cells
 #f_loom_path_scenic: this loom file is like counts.tsv
 !~/.conda/envs/yuan2/bin/pyscenic aucell \
-    {f_loom_path_scenic} \
-    regulons.csv \
-    --output {output_auc_mtx} \
-    --num_workers { THREADS }
+  {f_loom_path_scenic} \
+  {output_regulon} \
+  --output {output_auc_mtx} \
+  --num_workers { THREADS }
+
+
+
+
