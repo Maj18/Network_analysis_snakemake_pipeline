@@ -45,10 +45,8 @@ f_tfs = "/scratch/yuan/pyscenicdata/hs_hgnc_curated_tfs.txt" # human
 # tf_names = load_tf_names( f_tfs )
 
 # f_loom_path_scenic: This dataset has been filtered, but not processed
-!~/.conda/envs/yuan2/bin/pyscenic grn {f_loom_path_scenic} 
-										{f_tfs} \ 
-										-o adjacencies.csv \
-										--num_workers { THREADS }
+!~/.conda/envs/yuan2/bin/pyscenic grn {f_loom_path_scenic} {f_tfs} -o adjacencies.csv \
+    --num_workers { THREADS }
 
 
 ### 2. Regulon prediction aka cisTarget from CLI (Find enriched motifs for a gene signature and opitionally prune targets from this signature based on cis-regulatory cues)
